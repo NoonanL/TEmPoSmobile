@@ -1,6 +1,7 @@
-export const getCustomers = (username) => {
+export const createTransaction = (username, customerId, productId) => {
     //console.log(username);
-    const URL = 'http://127.0.0.1:9001/getCustomersServlet';
+    //console.log(searchStr);
+    const URL = 'http://127.0.0.1:9001/createTransactionServlet';
     return fetch(URL, {
         method: 'POST',
         headers: {
@@ -9,7 +10,9 @@ export const getCustomers = (username) => {
             'secret': 'I am the server\'s secret!'
         },
         body: JSON.stringify({
-            requestUser: username
+            requestUser: username,
+            customerId: customerId,
+            productId: productId
         }),
     })
         .then((response) => response.json())

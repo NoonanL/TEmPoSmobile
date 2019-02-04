@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Platform, StyleSheet, View} from 'react-native';
+import {Platform, StyleSheet, View, KeyboardAvoidingView} from 'react-native';
 import {Form, Item, Label, Input, Button, Text, Content} from 'native-base';
 import Loader from './Loader';
 import {authenticate} from '../services/auth';
@@ -7,10 +7,10 @@ import {getCustomers} from '../services/getCustomers';
 // import ButtonEx from './Button';
 
 
-export default class Login extends Component<>{
+ class LoginScreen extends Component<>{
 	constructor(props){
 		super(props);
-		console.log(props);
+		//console.log(props);
 	}
 	state = {
 		username: '',
@@ -42,11 +42,11 @@ export default class Login extends Component<>{
 		const{username, password} = this.state;
 		authenticate(username,password)
 		.then((response) => {
-			console.log(response);
+			//console.log(response);
 			if(response.auth === 'OK'){
-				console.log('Got here');
+				//console.log('Got here');
 				this.onAuthSuccess();
-				this.props.view();
+				//this.props.view();
 			}else{
 				this.onAuthFailed();
 			};
@@ -54,30 +54,25 @@ export default class Login extends Component<>{
 			console.log('Problem with onButtonPress: ' + error.message);
 			throw error;
 		});
-		// console.log(this.state.username);
-		// console.log(this.state.password);
 	}
 
 	onAuthSuccess(){
 		console.log('Successful Login')
-		getCustomers(this.state.username).then((response) => {
-			console.log(response);
-			if(response.response === 'OK.'){
-				this.state.customers = response;
-			}else{
-				console.log('Failed to get customer data.')
-			};
-		}).catch(function(error) {
-			console.log('Problem in auth success: ' + error.message);
-			throw error;
-		});
-		this.props.username(this.state.username, this.state.customers);
+		//console.log(this.state.username)
+		//console.log('username is : ' + this.state.username)
+		var username = this.state.username;
+		//console.log('Variable is : ' + username)
+		//this.props.username(this.state.username);
+		// this.setState({
+		// 	username: '',
+		// 	password: '',
+		// 	error: '',
+		// 	loading: false,
+		// });
 		this.setState({
-			username: '',
-			password: '',
-			error: '',
-			loading: false,
+			loading:false
 		});
+		this.props.navigation.navigate('Home', {username:username});
 	}
 
 	onAuthFailed(){
@@ -94,7 +89,8 @@ export default class Login extends Component<>{
           <View style={styles.logoContainer}>
 	          <Text style={styles.logo}>TEmPoS</Text>
 	          <Text>Please Log In</Text>
-	      </View>    
+	      </View> 
+	      <KeyboardAvoidingView>   
           <Form style={styles.form}>
             <Item fixedLabel>
               <Label>Username</Label>
@@ -108,11 +104,14 @@ export default class Login extends Component<>{
             {this.renderLoader()}
             </View>
           </Form>
+          </KeyboardAvoidingView>
           </Content>
 
     );
   }
 }
+
+export default LoginScreen;
 
 
 const styles = StyleSheet.create({
@@ -121,7 +120,7 @@ const styles = StyleSheet.create({
 		marginTop: 25,
 	},
 	form:{
-		marginTop: '40%',
+		marginTop: '30%',
 	},
 	errorMessage:{
 		// textAlign: 'center',

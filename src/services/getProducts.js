@@ -1,6 +1,6 @@
-export const getCustomers = (username) => {
+export const getProducts = (username) => {
     //console.log(username);
-    const URL = 'http://127.0.0.1:9001/getCustomersServlet';
+    const URL = 'http://127.0.0.1:9001/getProductsServlet';
     return fetch(URL, {
         method: 'POST',
         headers: {

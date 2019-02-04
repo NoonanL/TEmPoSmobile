@@ -1,6 +1,7 @@
-export const getCustomers = (username) => {
+export const searchCustomers = (username, searchStr) => {
     //console.log(username);
-    const URL = 'http://127.0.0.1:9001/getCustomersServlet';
+    //console.log(searchStr);
+    const URL = 'http://127.0.0.1:9001/searchCustomerServlet';
     return fetch(URL, {
         method: 'POST',
         headers: {
@@ -9,7 +10,8 @@ export const getCustomers = (username) => {
             'secret': 'I am the server\'s secret!'
         },
         body: JSON.stringify({
-            requestUser: username
+            requestUser: username,
+            searchString: searchStr,
         }),
     })
         .then((response) => response.json())
