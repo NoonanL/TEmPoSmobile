@@ -1,7 +1,7 @@
 export const searchProducts = (username, searchStr) => {
     console.log(username);
     console.log(searchStr);
-    const URL = 'http://127.0.0.1:9001/searchProductsServlet';
+    const URL = 'http://192.168.1.192:9001/searchProductsServlet';
     return fetch(URL, {
         method: 'POST',
         headers: {

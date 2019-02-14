@@ -1,6 +1,6 @@
 export const getCustomers = (username) => {
     //console.log(username);
-    const URL = 'http://127.0.0.1:9001/getCustomersServlet';
+    const URL = 'http://192.168.1.192:9001/getCustomersServlet';
     return fetch(URL, {
         method: 'POST',
         headers: {

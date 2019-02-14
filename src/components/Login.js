@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import {Platform, StyleSheet, View, KeyboardAvoidingView} from 'react-native';
-import {Form, Item, Label, Input, Button, Text, Content} from 'native-base';
+import {Form, Item, Label, Input, Button, Text, Content, Header, Container} from 'native-base';
 import Loader from './Loader';
 import {authenticate} from '../services/auth';
 import {getCustomers} from '../services/getCustomers';
 // import ButtonEx from './Button';
 
 
- class LoginScreen extends Component<>{
+ class LoginScreen extends Component{
 	constructor(props){
 		super(props);
 		//console.log(props);
@@ -26,14 +26,15 @@ import {getCustomers} from '../services/getCustomers';
 			return <Loader size={"large"}/>
 		}else{
 			return (
-				<Button full onPress={this.onButtonPress.bind(this)}>
-					<Text>
-						Login
-					</Text>
-				</Button>
+					<View style={styles.button}>
+						<Button full onPress={this.onButtonPress.bind(this)}>
+						<Text>
+							Login
+						</Text>
+						</Button>
+				 </View>
 				)
-			
-		}
+		 }
 	}
 
 	onButtonPress(){
@@ -86,12 +87,12 @@ import {getCustomers} from '../services/getCustomers';
 	render() {
     return (
           <Content>
+
           <View style={styles.logoContainer}>
 	          <Text style={styles.logo}>TEmPoS</Text>
-	          <Text>Please Log In</Text>
-	      </View> 
-	      <KeyboardAvoidingView>   
-          <Form style={styles.form}>
+	      	</View> 
+	       
+          <Form >
             <Item fixedLabel>
               <Label>Username</Label>
               <Input text={this.state.username} onChangeText={username=>this.setState({username})}/>
@@ -100,12 +101,11 @@ import {getCustomers} from '../services/getCustomers';
               <Label>Password</Label>
               <Input text={this.state.password} secureTextEntry={true} onChangeText={password=>this.setState({password})}/>
             </Item>
-            <View style={styles.button}>
-            {this.renderLoader()}
-            </View>
           </Form>
-          </KeyboardAvoidingView>
-          </Content>
+					
+					{this.renderLoader()}
+
+</Content>
 
     );
   }
@@ -117,24 +117,24 @@ export default LoginScreen;
 const styles = StyleSheet.create({
 	button:{
 		flex:1,
-		marginTop: 25,
 	},
 	form:{
+		flex:1,
 		marginTop: '30%',
 	},
 	errorMessage:{
-		// textAlign: 'center',
+		textAlign: 'center',
 		color: '#FF0000',
 		marginBottom: 5,
 	},
 	logoContainer: {
 		flex: 1,
-		marginTop: '25%',
+		marginTop: '15%',
 		justifyContent: 'center',
 		alignItems: 'center',
 	},
 	logo: {
-		fontWeight: 'bold',
+			fontWeight: 'bold',
     	fontSize: 80,
     	paddingBottom: 100
 	}

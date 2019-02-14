@@ -1,7 +1,7 @@
 export const authenticate = (username, password) => {
     //console.log(username);
     //console.log(password);
-    const URL = 'http://127.0.0.1:9001/loginServlet';
+    const URL = 'http://192.168.1.192:9001/loginServlet';
     //console.log(URL);
     return fetch(URL, {
         method: 'POST',
