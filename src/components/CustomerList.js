@@ -163,17 +163,17 @@ const styles = StyleSheet.create({
     marginTop: '10%',
   },
   listContainer: {
-    marginTop: '10%'
+    marginTop: '5%'
   },
   logoContainer: {
     flex: 1,
-    marginTop: '20%',
+    marginTop: '15%',
     justifyContent: 'center',
     alignItems: 'center',
   },
   logo: {
     fontWeight: 'bold',
     fontSize: 60,
-    paddingBottom: 100
+    paddingBottom:'5%'
   }
 });

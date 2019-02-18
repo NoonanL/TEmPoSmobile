@@ -82,17 +82,15 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5FCFF',
-    marginTop: '20%'
+    backgroundColor: '#F5FCFF'
   },
   button: {
     flex: 1,
-    marginTop: '25%',
-  //alignItems: 'center',
+    marginTop: '25%'
   },
   logoContainer: {
     flex: 1,
-    marginTop: '5%',
+    marginTop: '15%',
     justifyContent: 'center',
     alignItems: 'center',
   },

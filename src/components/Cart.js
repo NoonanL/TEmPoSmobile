@@ -28,7 +28,7 @@ class Cart extends Component {
 				<Text>Product: {this.state.product.SKU}, {this.state.product.name}</Text>
 				</View>
 				
-				<Button full light style={styles.Button} onPress={this.completeTransaction.bind(this)}>
+				<Button full success style={styles.Button} onPress={this.completeTransaction.bind(this)}>
 				<Text>Complete Transaction</Text>
 				</Button>
 
@@ -101,13 +101,13 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     flex: 1,
-    marginTop: '20%',
+    marginTop: '15%',
     justifyContent: 'center',
     alignItems: 'center',
   },
   logo: {
     fontWeight: 'bold',
     fontSize: 60,
-    paddingBottom: 100
+    paddingBottom: '5%'
   }
 });
