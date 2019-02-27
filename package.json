@@ -12,6 +12,7 @@
     "react-native": "^0.58.4",
     "react-native-gesture-handler": "^1.0.15",
     "react-native-paho-mqtt": "^0.1.1",
+    "react-native-public-ip": "^1.0.1",
     "react-navigation": "^3.2.1",
     "react-transform-hmr": "^1.0.4"
   },

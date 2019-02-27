@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import {Platform, StyleSheet, View, KeyboardAvoidingView} from 'react-native';
 import {Form, Item, Label, Input, Button, Text, Content, Header, Container} from 'native-base';
 import Loader from './Loader';
-import { Client, Message } from 'react-native-paho-mqtt';
+
 import {authenticate} from '../services/auth';
+import {publishMQTT} from '../services/mqttTransaction';
 import {getCustomers} from '../services/getCustomers';
 // import ButtonEx from './Button';
 
@@ -41,48 +42,8 @@ import {getCustomers} from '../services/getCustomers';
 	}
 
 	onButtonPress(){
-		const myStorage = {
-			setItem: (key, item) => {
-				myStorage[key] = item;
-			},
-			getItem: (key) => myStorage[key],
-			removeItem: (key) => {
-				delete myStorage[key];
-			},
-		};
 		
-
-		// Create a client instance
-	const client = new Client({ uri: 'ws://192.168.1.192:1884/ws', clientId: 'ReactNative', storage: myStorage });
-
-	// set event handlers
-client.on('connectionLost', (responseObject) => {
-  if (responseObject.errorCode !== 0) {
-    console.log(responseObject.errorMessage);
-  }
-});
-client.on('messageReceived', (message) => {
-  console.log(message.payloadString);
-});
-
-// connect the client
-client.connect()
-  .then(() => {
-    // Once a connection has been made, make a subscription and send a message.
-    console.log('onConnect');
-    return client.subscribe('Test');
-  })
-  .then(() => {
-    const message = new Message('Hello from React Native!!');
-    message.destinationName = 'Test';
-    client.send(message);
-  })
-  .catch((responseObject) => {
-    if (responseObject.errorCode !== 0) {
-      console.log('onConnectionLost:' + responseObject.errorMessage);
-    }
-  })
-;
+// publishMQTT("Test", "I'm sending a message from the publishMQTT function!");
 
 		// console.log(this.state.error);
 		this.setState({error: '', loading: true});
