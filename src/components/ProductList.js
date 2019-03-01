@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, FlatList, KeyboardAvoidingView } from 'react-native';
 import Loader from './Loader';
-import { Input, Content, Button, Text, Form, Item } from 'native-base';
+import { Input, Content, Button, Text, Form, Item, Icon } from 'native-base';
 import { getProducts } from '../services/getProducts';
 import { searchProducts } from '../services/searchProducts';
 import Product from './Product';
+import { ScrollView } from 'react-native-gesture-handler';
 
 class ProductList extends Component {
 	constructor(props) {
@@ -14,7 +15,6 @@ class ProductList extends Component {
 	state = {
 		username: this.props.navigation.state.params.username,
 		customer: this.props.navigation.state.params.customer,
-		selected: [],
 		searchStr: '',
 		error: '',
 		loading: false
@@ -24,8 +24,7 @@ class ProductList extends Component {
 		this.setState({
 			error: '',
 			loading: true,
-			products: [],
-			selected: []
+			products: []
 		});
 		getProducts(this.state.username)
 			.then(response => {
@@ -53,7 +52,7 @@ class ProductList extends Component {
 			return <Loader size={'large'} />;
 		} else {
 			return (
-				<View style={styles.listContainer}>
+				<View style={{ flex: 1 }}>
 					<FlatList
 						data={this.state.products}
 						renderItem={({ item }) => (
@@ -67,82 +66,74 @@ class ProductList extends Component {
 
 	render() {
 		return (
-			<View>
+			<Content>
 				<View style={styles.logoContainer}>
 					<Text style={styles.logo}>TEmPoS</Text>
 					<Text>Products</Text>
 				</View>
-				<KeyboardAvoidingView>
-					<Form style={styles.form}>
-						<Item rounded>
-							<Input
-								placeholder="Search..."
-								text={this.state.searchStr}
-								onChangeText={searchStr =>
-									this.setState({
-										searchStr
-									})
-								}
-							/>
-						</Item>
-						<Button full onPress={this.search.bind(this)}>
-							<Text>Search</Text>
-						</Button>
-					</Form>
-				</KeyboardAvoidingView>
 
-				{this.renderLoader()}
-			</View>
+				<Form>
+					<Item rounded>
+						<Input
+							placeholder="Search..."
+							text={this.state.searchStr}
+							onChangeText={searchStr =>
+								this.setState({
+									searchStr
+								})
+							}
+						/>
+					</Item>
+					<Button full onPress={this.search.bind(this)}>
+						<Icon name="search" />
+						<Text>Search</Text>
+					</Button>
+					<Button full success onPress={this.viewCart.bind(this)}>
+						<Icon name="ios-cart" />
+						<Text>Shopping Cart</Text>
+					</Button>
+					{this.renderLoader()}
+				</Form>
+			</Content>
 		);
 	}
 
-	//SO.. this is working other than the fact that you have to press the button twice for it to register. Something to do
-	//with state immutability or how the selected state is declared? Figure it out.
-	// incrementProduct(item) {
-	//     var present = false;
-	//     this.state.selected.map((product) => {
-	//         if (product === item) {
-	//             console.log(product)
-	//             present = true;
-	//             var number = parseInt(product.quantity);
-	//             number = number + 1;
-	//             product.quantity = number.toString();
-	//         }
-	//     });
-	//     if (present === false) {
-	//         var newState = this.state.selected.concat(item);
-	//         this.setState({
-	//             selected: newState
-	//         })
-	//     }
-
-	// }
-
-	productSelected(item) {
+	viewCart() {
 		var username = this.state.username;
 		var customer = this.state.customer;
+		var total = 0;
+		var items = [];
+		this.state.products.map(x => {
+			if (parseInt(x.quantity) > 0) {
+				total = total + parseInt(x.quantity) * parseInt(x.RRP);
+				items.push(x);
+			}
+		});
+		//console.log(items);
+		//console.log('total is ' + total);
 		//console.log('Function executing..' + item.firstname)
 		this.props.navigation.navigate('Cart', {
 			username: username,
 			customer: customer,
-			product: item
+			products: items,
+			total: total
 		});
 	}
 
 	//Function to update item quantity
 	updateItem(item) {
-		console.log('Changing quantity for item ' + item.SKU);
+		//console.log('Changing quantity for item ' + item.SKU);
 		//console.log(this.state.products);
 		this.state.products.map(x => {
 			if (item.id == x.id) {
 				x.quantity = item.quantity;
-				console.log('Successfully changed');
+				//console.log('Successfully changed');
 			}
 		});
 	}
 
 	search() {
-		console.log(this.state.searchStr);
+		//console.log(this.state.searchStr);
 		this.setState({
 			error: '',
 			loading: true,
@@ -150,7 +141,7 @@ class ProductList extends Component {
 		});
 		searchProducts(this.state.username, this.state.searchStr)
 			.then(response => {
-				console.log(response);
+				//console.log(response);
 				if (response.response === 'OK') {
 					//console.log('Got here');
 					//console.log(response);
@@ -175,22 +166,12 @@ class ProductList extends Component {
 export default ProductList;
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-		backgroundColor: '#F5FCFF',
-		marginTop: '20%'
-	},
 	form: {
 		marginTop: '25%'
 	},
 	button: {
 		flex: 1,
 		marginTop: '10%'
-	},
-	listContainer: {
-		marginTop: '5%'
 	},
 	logoContainer: {
 		flex: 1,

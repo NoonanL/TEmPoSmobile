@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, FlatList, KeyboardAvoidingView } from 'react-native';
 import Loader from './Loader';
-import { Input, Content, Button, Text, Form, Item } from 'native-base';
+import { Input, Content, Button, Text, Form, Icon } from 'native-base';
 import { createTransaction } from '../services/createTransaction';
 import { publishMQTT } from '../services/mqttTransaction';
 
@@ -12,7 +12,8 @@ class Cart extends Component {
 	state = {
 		username: this.props.navigation.state.params.username,
 		customer: this.props.navigation.state.params.customer,
-		product: this.props.navigation.state.params.product,
+		products: this.props.navigation.state.params.products,
+		total: this.props.navigation.state.params.total,
 		error: '',
 		loading: false
 	};
@@ -28,17 +29,26 @@ class Cart extends Component {
 							Customer: {this.state.customer.firstname},{' '}
 							{this.state.customer.surname}
 						</Text>
-						<Text>
+						{/* <Text>
 							Product: {this.state.product.SKU}, {this.state.product.name}
-						</Text>
+            </Text> */}
+						<FlatList
+							data={this.state.products}
+							renderItem={({ item }) => (
+								<Text>
+									ITEM: {item.SKU} - QUANTITY: {item.quantity}
+								</Text>
+							)}
+						/>
 					</View>
-
+					<Text>Total Cost: {this.state.total}</Text>
 					<Button
 						full
 						success
 						style={styles.Button}
 						onPress={this.completeTransaction.bind(this)}
 					>
+						<Icon name="ios-basket" />
 						<Text>Complete Transaction</Text>
 					</Button>
 				</View>
@@ -47,6 +57,16 @@ class Cart extends Component {
 	}
 
 	completeTransaction() {
+		var purchased = [];
+
+		this.state.products.map(x => {
+			var item = {
+				productId: x.id,
+				quantity: x.quantity
+			};
+			purchased.push(item);
+		});
+
 		//console.log(this.state.searchStr)
 		this.setState({
 			error: '',
@@ -57,32 +77,11 @@ class Cart extends Component {
 			customerId: this.state.customer.id,
 			customerName:
 				this.state.customer.firstname + ' ' + this.state.customer.surname,
-			productId: this.state.product.id,
-			productName: this.state.product.name
+			products: purchased
 		});
-		console.log(transaction);
+		//console.log(transaction);
 		publishMQTT('Transactions', transaction);
 		this.props.navigation.navigate('Home');
-		//transaction = "username:" + this.state.username + ", customerId:" + this.state.customer.id + "," + this.state.product.id
-		// createTransaction(this.state.username, this.state.customer.id, this.state.product.id)
-		//   .then((response) => {
-		//     //console.log(response);
-		//     if (response.response === 'OK') {
-		//       //console.log('Got here');
-		//       //console.log(response);
-		//       this.setState({
-		//         loading: false
-		//       })
-		//       this.props.navigation.navigate('ProductList')
-		//     } else {
-		//       console.log('Failed')
-		//     }
-		//     ;
-		//   }).catch(function(error) {
-		//   console.log('Problem with create Transaction request ');
-		//   throw error;
-		// });
-		//console.log(this.state.customers);
 	}
 
 	render() {

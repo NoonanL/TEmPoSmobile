@@ -7,23 +7,21 @@ import ProductList from './components/ProductList';
 import Cart from './components/Cart';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 
-
-
 const AppStackNavigator = createStackNavigator({
-  Login: Login,
-  Home: Home,
-  CustomerList: CustomerList,
-  ProductList: ProductList,
-  Cart: Cart
-})
+	Login: Login,
+	Home: Home,
+	CustomerList: CustomerList,
+	ProductList: ProductList,
+	Cart: Cart
+});
 
 const AppContainer = createAppContainer(AppStackNavigator);
 
 export default AppContainer;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F5FCFF'
-  }
+	container: {
+		flex: 1,
+		backgroundColor: '#F5FCFF'
+	}
 });
