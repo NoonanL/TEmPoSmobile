@@ -4,10 +4,12 @@ import Loader from './Loader';
 import { Input, Content, Button, Text, Form, Item } from 'native-base';
 import { getProducts } from '../services/getProducts';
 import { searchProducts } from '../services/searchProducts';
+import Product from './Product';
 
 class ProductList extends Component {
 	constructor(props) {
 		super(props);
+		this.updateItem = this.updateItem.bind(this);
 	}
 	state = {
 		username: this.props.navigation.state.params.username,
@@ -55,25 +57,7 @@ class ProductList extends Component {
 					<FlatList
 						data={this.state.products}
 						renderItem={({ item }) => (
-							<View>
-								<Text>
-									{item.SKU} | {item.name} | {item.RRP}{' '}
-								</Text>
-								<View
-									style={{
-										flexDirection: 'row',
-										flexWrap: 'wrap'
-									}}
-								>
-									<Button
-										light
-										style={styles.Button}
-										onPress={this.productSelected.bind(this, item)}
-									>
-										<Text>Purchase</Text>
-									</Button>
-								</View>
-							</View>
+							<Product item={item} updateItem={this.updateItem} />
 						)}
 					/>
 				</View>
@@ -142,6 +126,18 @@ class ProductList extends Component {
 			username: username,
 			customer: customer,
 			product: item
+		});
+	}
+
+	//Function to update item quantity
+	updateItem(item) {
+		console.log('Changing quantity for item ' + item.SKU);
+		//console.log(this.state.products);
+		this.state.products.map(x => {
+			if (item.id == x.id) {
+				x.quantity = item.quantity;
+				console.log('Successfully changed');
+			}
 		});
 	}
 
