@@ -9,7 +9,8 @@ import {
 import Loader from './Loader';
 import { Input, Content, Button, Text, Form, Icon } from 'native-base';
 import { createTransaction } from '../services/createTransaction';
-import { publishMQTT } from '../services/mqttTransaction';
+//import { publishMQTT } from '../services/mqttTransaction';
+import { publishMQTT } from '../services/mqtt';
 
 class Cart extends Component {
   constructor(props) {
@@ -87,7 +88,9 @@ class Cart extends Component {
       products: purchased
     });
     //console.log(transaction);
+    //publishMQTT('Transactions', transaction, this.state.address); - DEPRECIATED
     publishMQTT('Transactions', transaction, this.state.address);
+
     Alert.alert(
       'Complete!',
       'Transaction completed, returning to Home screen.',

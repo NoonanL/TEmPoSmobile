@@ -24,34 +24,42 @@ export const publishMQTT = (topic, publishMessage, address) => {
     storage: myStorage
   });
 
+  //   const message = new Message(publishMessage);
+  //   message.destinationName = topic;
+  //   client.send(message);
+
   // set event handlers
   client.on('connectionLost', responseObject => {
     if (responseObject.errorCode !== 0) {
-      console.log(responseObject.errorMessage);
+      console.log(responseObject);
     }
   });
   client.on('messageReceived', message => {
     console.log(message.payloadString);
   });
 
+  let options = {};
+
   // connect the client
   client
-    .connect()
+    .connect(options)
     .then(() => {
       // Once a connection has been made
       console.log('Connected to broker.');
+      return client.subscribe('Transactions');
     })
     .then(() => {
       const message = new Message(publishMessage);
       message.destinationName = topic;
+      message.qos = 1;
       client.send(message);
     })
-    .then(() => {
-      client.disconnect();
-    })
+    // .then(() => {
+    //   client.disconnect();
+    // })
     .catch(responseObject => {
       if (responseObject.errorCode !== 0) {
-        console.log('Connection to Broker lost:' + responseObject.errorMessage);
+        console.log('Connection to Broker lost:' + responseObject);
       }
     });
 };
