@@ -12,6 +12,12 @@ export const publishMQTT = (topic, publishMessage, address) => {
     storageBackend: AsyncStorage,
     defaultExpires: 1000 * 3600 * 24,
     enableCache: true,
+    /*
+    This is REALLY important. You have to set this to false so that the broker tries to reconnect
+     and persists the message for the client until the reconnection from this particular client is noted
+    */
+    cleanSession: false,
+    reconnect: true,
     sync: {}
   });
 
@@ -25,6 +31,7 @@ export const publishMQTT = (topic, publishMessage, address) => {
   //On Message delivery confirmed
   function onMessageDelivered() {
     console.log('Message was delivered, disconnecting from broker.');
+    //client.disconnect();
   }
 
   //On Connection lost
@@ -39,6 +46,10 @@ export const publishMQTT = (topic, publishMessage, address) => {
   //On attempt to connect failure
   function onFailure() {
     console.log('Failed to connect to broker, will attempt to reconnect...');
+    client.connect({
+      onSuccess: onConnect,
+      onFailure: onFailure
+    });
   }
 
   //On Message Arrives
@@ -47,7 +58,7 @@ export const publishMQTT = (topic, publishMessage, address) => {
   }
 
   //Create client object and set it's handlers.
-  const client = new Paho.MQTT.Client(address, 1884, '/ws', 'ReactNative');
+  const client = new Paho.MQTT.Client(address, 1884, '/ws', 'ReactNative2');
   client.onConnectionLost = onConnectionLost;
   client.onMessageArrived = onMessageArrived;
   client.onMessageDelivered = onMessageDelivered;
@@ -55,12 +66,10 @@ export const publishMQTT = (topic, publishMessage, address) => {
   //Connect to the Mosquitto Broker
   client.connect({
     onSuccess: onConnect,
-    onFailure: onFailure,
-    /*
-    This is REALLY important. You have to set this to false so that the broker tries to reconnect
-     and persists the message for the client until the reconnection from this particular client is noted
-    */
-    cleanSession: false,
-    reconnect: true
+    onFailure: onFailure
   });
+
+  //Now that the messages have all sent properly, disconnect without the requirement to attempt reconnect
+  // client.reconnect = false;
+  //client.disconnect();
 };
